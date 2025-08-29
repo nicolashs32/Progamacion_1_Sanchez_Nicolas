@@ -1,47 +1,51 @@
 
+# Diccionario de atracciones con precios
+atracciones = {
+    1: ("Montaña Rusa", 1500),
+    2: ("Casa del Terror", 1200),
+    3: ("Carrusel", 800)
+}
 
-def mostrar_atracciones ():
-    print("Menu de atracciones")
-    print("1_Montaña rusa")
-    print("2_Carrusel")
-    print("3_casa del terror")
-    selecion_atracciones = int(input(f"enumere cuantas atracciones desea visitar: "))
-    atracciones = ""
-    for i in range(selecion_atracciones):
-
-        atraccion = int(input(f"selecciones atraccion a visitar {i+1}: ")) 
-        atracciones += atraccion
-    return atracciones
+def mostrar_atracciones():
+    print("Atracciones disponibles:")
+    print("1. Montaña Rusa - $1500")
+    print("2. Casa del Terror - $1200")
+    print("3. Carrusel - $800")
 
 def puede_subir(edad, atraccion):
     if atraccion == "Montaña Rusa" and edad < 12:
         return False
-    elif edad < 6 and atraccion != "Carrusel":
+    if atraccion != "Carrusel" and edad < 6:
         return False
     return True
 
 def calcular_precio(atraccion):
-    return atracciones[atraccion]
+    for opcion, datos in atracciones.items():
+        nombre, precio = datos
+        if nombre == atraccion:
+            return precio
+    return 0
 
 def registrar_visita():
     nombre = input("Ingrese el nombre del visitante: ")
     edad = int(input("Ingrese la edad del visitante: "))
     cant_atracciones = int(input("¿Cuántas atracciones desea usar? (máx 3): "))
 
-    elegidas = ""
-    usadas = ""
+    atracciones_elegidas = ""
+    atracciones_permitidas = ""
     costo_total = 0
 
     mostrar_atracciones()
 
     for i in range(cant_atracciones):
         opcion = int(input(f"Seleccione la atracción {i+1} (1-3): "))
-        atraccion = list(atracciones.keys())[opcion - 1]
-        elegidas.append(atraccion)
+        atraccion, _ = atracciones[opcion]
+
+        atracciones_elegidas += atraccion + " "
 
         if puede_subir(edad, atraccion):
             print(f"Puede subir a la {atraccion}.")
-            usadas.append(atraccion)
+            atracciones_permitidas += atraccion + " "
             costo_total += calcular_precio(atraccion)
         else:
             print(f"No puede subir a la {atraccion}.")
@@ -49,9 +53,9 @@ def registrar_visita():
     resumen = {
         "nombre": nombre,
         "edad": edad,
-        "elegidas": elegidas,
-        "usadas": usadas,
-        "costo": costo_total
+        "elegidas": atracciones_elegidas,
+        "permitidas": atracciones_permitidas,
+        "costo_total": costo_total
     }
     return resumen
 
@@ -60,5 +64,5 @@ def mostrar_resumen(resumen):
     print(f"Nombre: {resumen['nombre']}")
     print(f"Edad: {resumen['edad']} años")
     print(f"Atracciones elegidas: {resumen['elegidas']}")
-    print(f"Atracciones permitidas: {resumen['usadas']}")
-    print(f"Costo total: ${resumen['costo']}")
+    print(f"Atracciones permitidas: {resumen['permitidas']}")
+    print(f"Costo total: ${resumen['costo_total']}")
